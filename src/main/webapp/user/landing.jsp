@@ -12,7 +12,12 @@
 <title>Landing Page</title>
 </head>
 <body>
-<a href="<%=request.getContextPath()%>/UserController/show-courses">View Category details</a>
+<form action="<%=request.getContextPath()%>/UserController/show-courses" method="post">
+	  <input type="hidden" value=1 name="category_id">
+	  <input type="hidden" value="photography" name="category_name">
+	  <input type="submit" value="View all courses in this category" class="btn btn-primary">
+</form> 
+<%-- <a href="<%=request.getContextPath()%>/UserController/show-courses">View all courses in this category</a> --%>
 
 <%-- <a href="<c:url value="/UserController/show-courses"/>">View Category details</a> --%>
     <!-- here category name -->

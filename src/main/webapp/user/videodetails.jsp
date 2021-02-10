@@ -18,7 +18,7 @@
 </head>
 <body>
 	<!-- here Course name -->
-	<h2 class="category"><%=session.getAttribute("course_name")%></h2> 
+	<h2 class="category"><%=request.getParameter("course_name")%></h2> 
 	<c:forEach var="v" items="${video}">
 		<div class="list-group">
 		

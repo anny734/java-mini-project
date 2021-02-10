@@ -20,7 +20,6 @@ public class UserDaoImpl implements UserDao{
 	
 		String sql = "select course_id, course_name, course_image, category_id, course_desc from course where category_id = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
-		System.out.println("in course table category_id: "+id);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 
@@ -42,9 +41,39 @@ public class UserDaoImpl implements UserDao{
 		return null;
 	}
 
-	public int addEnrollement(EnrollCourse e) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int addEnrollement(EnrollCourse e) throws Exception {
+		int count = 0;
+		Connection con = DbUtil.getCon();
+		String sql = "insert into enroll_course (user_id,course_id,start_date) values (?,?,?)";
+		PreparedStatement ps = con.prepareStatement(sql);
+		int user_id = e.getUserId();
+		int course_id = e.getCourseId();
+		ps.setInt(1,user_id);
+		ps.setInt(2,course_id);
+		ps.setDate(3,e.getStartDate());
+
+		if(ps.executeUpdate()==1) {
+			String sql1 = "select video_id from video where course_id=? ";
+			PreparedStatement ps1 = con.prepareStatement(sql1);
+			ps1.setInt(1, course_id);
+			ResultSet rs = ps1.executeQuery();
+
+//			List<Integer> video_ids = new ArrayList<Integer>();
+			while (rs.next()) {
+				int video_id = rs.getInt(1);
+				String sql2 = "insert into enroll_course_video (user_id, course_id, video_id) values(?,?,?)";
+				PreparedStatement ps2 = con.prepareStatement(sql2);
+				ps2.setInt(1, user_id);
+				ps2.setInt(2, course_id);
+				ps2.setInt(3, video_id);
+				
+				ps2.executeUpdate();
+			}
+			
+		}
+		
+		return count;
+		 
 	}
 
 	public int addVideoDetails(Video v) {
@@ -70,6 +99,21 @@ public class UserDaoImpl implements UserDao{
 			videos.add(video);
 		}
 		return videos;
+	}
+
+	public int getentrollement(int user_id, int course_id) throws Exception {
+		Connection con = DbUtil.getCon();
+		String sql = "select start_date from enroll_course where user_id = ? and course_id = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setInt(1, user_id);
+		ps.setInt(2, course_id);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			return 1;
+		}else {
+			return 0;
+		}
+		
 	}
 
 }

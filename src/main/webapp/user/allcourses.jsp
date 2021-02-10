@@ -19,8 +19,9 @@
 </head>
 <body>
 <!-- here category name -->
-	<% int n=0; %>
-	<h2 class="category">Category name</h2> 
+<%-- <c:out value="${requestScope.category_name}"></c:out> --%>
+<%-- <%=request.getParameter("category_name") %> --%>
+	<h2 class="category"><%=request.getParameter("category_name") %></h2> 
 	<c:forEach var="u" items="${course}">
 		<!-- card -->
 	    <div class="card" style="width:400px">
@@ -28,15 +29,16 @@
 	      <div class="card-body">
 	        <h4 class="card-title"><c:out value="${u.name}"></c:out></h4>
 	        <p class="card-text"><c:out value="${u.desc}"></c:out></p>
-	        <form action="<%=request.getContextPath()%>/UserController/start-course">
+	        <form action="<%=request.getContextPath()%>/UserController/start-course" method="post">
 	        	<input type="hidden" value="${u.id}" name="course_id">
-	        	<input type="submit" value="Enroll now" class="btn btn-primary mycard">
+	        	<input type="hidden" value="${u.name}" name="course_name">
+	        	<input type="submit" value="Enroll now" class="btn btn-primary">
 	        </form>
 	       <%--  <a href="<%=request.getContextPath()%>/UserController/start-course" class="btn btn-primary mycard">Enroll now</a> --%>
 	        <%-- <c:if test=""></c:if> --%>
 	        <%-- <% session.setAttribute("${u.name}", "+${u.id}+"); %>  --%>
 	      <%-- 	<c:set var="<%=n%>" value="${u.id}" scope="session" />  --%>
-			<c:set var="course_name" value="${u.name}" scope="session" />
+			<%-- <c:set var="course_name" value="${u.name}" scope="session" /> --%>
 	      </div>
 	    </div>
 	</c:forEach>

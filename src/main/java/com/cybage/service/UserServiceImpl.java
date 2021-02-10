@@ -30,9 +30,8 @@ public class UserServiceImpl implements UserService{
 		return null;
 	}
 
-	public int addEnrollement(EnrollCourse e) {
-		
-		return 0;
+	public int addEnrollement(EnrollCourse e) throws Exception{
+		return userDao.addEnrollement(e);
 	}
 
 	public int addVideoDetails(Video v) {
@@ -43,6 +42,9 @@ public class UserServiceImpl implements UserService{
 	public List<Video> getVideo(int id) throws Exception{
 		List<Video> video = userDao.getVideo(id);
 		return video;
+	}
+	public int getentrollement(int user_id, int course_id) throws Exception {
+		return userDao.getentrollement(user_id, course_id);
 	}
 
 }

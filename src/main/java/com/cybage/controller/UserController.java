@@ -2,6 +2,7 @@ package com.cybage.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.cybage.dao.UserDao;
 import com.cybage.dao.UserDaoImpl;
 import com.cybage.model.Course;
+import com.cybage.model.EnrollCourse;
 import com.cybage.model.Video;
 import com.cybage.service.UserService;
 import com.cybage.service.UserServiceImpl;
@@ -32,30 +34,51 @@ public class UserController extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 //		pw.append("Served at: ").append(request.getContextPath());
 		String path = request.getPathInfo();
-		System.out.println(path);
 		if (path.equals("/main")) {
 			request.getRequestDispatcher("/user/landing.jsp").forward(request, response);
-			System.out.println("ugvwu");
 		}
+		
 		if (path.equals("/show-courses")) {
 			System.out.println("inside allcourses of usercontroller");
+			int category_id = Integer.parseInt(request.getParameter("category_id"));
+			int user_id = 1011;
 			List<Course> course = null;
 			try {
-				course = userService.getCourse(1);
+				course = userService.getCourse(category_id);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			request.setAttribute("course", course);
-			request.getRequestDispatcher("/user/categorydetails.jsp").forward(request, response);
 			
+			for (int i = 0; i < course.size(); i++) {
+	            int course_id = course.get(i).getId();
+	            try {
+				int result = userService.getentrollement(user_id, course_id);
+						if(result==1) {
+							System.out.println("");
+							request.setAttribute("course", course);
+							request.getRequestDispatcher("/user/allcoursesforuser.jsp").forward(request, response);
+						}else {
+							request.setAttribute("course", course);
+							request.getRequestDispatcher("/user/allcourses.jsp").forward(request, response);
+						}
+	            	} catch (Exception e1) {
+	            		e1.getLocalizedMessage();
+	            		}
+	        }
 		}
 		
 		if (path.equals("/start-course")) {
-			System.out.println("inside allvideos of usercontroller");
+			System.out.println("inside /start-course");
+			int course_id = Integer.parseInt(request.getParameter("course_id"));
+			int user_id = 15;
 			
-			System.out.println("id: "+request.getParameter("course_id"));
-			/*System.out.println("name"+session.getAttribute("course_name"));*/
+			java.util.Date utilDate = new java.util.Date();
+			Date startDate = new Date(utilDate.getTime());
+			
+			EnrollCourse enroll = new EnrollCourse(user_id, course_id,startDate, null);
+			
+//			System.out.println("name"+request.getParameter("course_name"));
 			
 			List<Video> video = null;
 			try {
@@ -64,21 +87,28 @@ public class UserController extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-//			userService.addEnrollement(e)
+			
+			try {
+				userService.addEnrollement(enroll);
+			} catch (Exception e) {
+				e.getLocalizedMessage();
+			}
+			request.setAttribute("video", video);
+			request.getRequestDispatcher("/user/videodetails.jsp").forward(request, response);
+		}
+		if (path.equals("/continue-course")) {
+			List<Video> video = null;
+			try {
+				video = userService.getVideo(1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			request.setAttribute("video", video);
 			request.getRequestDispatcher("/user/videodetails.jsp").forward(request, response);
 		}
 		if (path.equals("/start-video")) {
 			System.out.println("inside viewvideo of usercontroller");
-//			List<Video> video = null;
-//			try {
-//				video = userService.getVideo(1);
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			request.setAttribute("video", video);
-//			request.getRequestDispatcher("/user/videodetails.jsp").forward(request, response);
+			
 		}
 	}
 
