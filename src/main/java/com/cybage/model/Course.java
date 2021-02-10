@@ -62,6 +62,11 @@ public class Course {
 		this.desc = desc;
 		this.course_image = course_image;
 	}
+	@Override
+	public String toString() {
+		return "Course [id=" + id + ", name=" + name + ", desc=" + desc + ", course_image=" + course_image
+				+ ", category=" + category + "]";
+	}
 	
 	
 	

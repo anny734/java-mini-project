@@ -3,6 +3,7 @@ package com.cybage.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -43,6 +44,8 @@ public class UserController extends HttpServlet {
 			int category_id = Integer.parseInt(request.getParameter("category_id"));
 			int user_id = 1011;
 			List<Course> course = null;
+			List<Course> enrolledcourse = new ArrayList<Course>();
+			List<Course> newcourse = new ArrayList<Course>();
 			try {
 				course = userService.getCourse(category_id);
 				
@@ -55,17 +58,22 @@ public class UserController extends HttpServlet {
 	            try {
 				int result = userService.getentrollement(user_id, course_id);
 						if(result==1) {
-							System.out.println("");
-							request.setAttribute("course", course);
-							request.getRequestDispatcher("/user/allcoursesforuser.jsp").forward(request, response);
-						}else {
-							request.setAttribute("course", course);
-							request.getRequestDispatcher("/user/allcourses.jsp").forward(request, response);
-						}
+							enrolledcourse.add(course.get(i));
+						}else{
+							newcourse.add(course.get(i));	
+						}		
 	            	} catch (Exception e1) {
 	            		e1.getLocalizedMessage();
 	            		}
 	        }
+			for (int i = 0; i < enrolledcourse.size(); i++) {
+				System.out.println(enrolledcourse.get(i).toString());
+			}
+			request.setAttribute("enrolledcourse", enrolledcourse);
+			request.setAttribute("newcourse", newcourse);
+			request.getRequestDispatcher("/user/allcoursesforuser.jsp").forward(request, response);
+//			request.setAttribute("newcourse", newcourse);
+//			request.getRequestDispatcher("/user/allcourses.jsp").forward(request, response);
 		}
 		
 		if (path.equals("/start-course")) {
