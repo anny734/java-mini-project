@@ -35,7 +35,11 @@ public class Category {
 		this.category_url = category_url;
 	}
 	public Category() {
-		// TODO Auto-generated constructor stub
 	}
+	@Override
+	public String toString() {
+		return "Category [id=" + id + ", name=" + name + ", category_url=" + category_url + "]";
+	}
+	
 
 }

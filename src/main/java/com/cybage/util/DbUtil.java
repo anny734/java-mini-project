@@ -12,7 +12,7 @@ public class DbUtil {
 	
 	private static String dbUrl = "jdbc:mysql://localhost:3306/java-minor";
 	private static String dbUser = "root";
-	private static String dbPassword = "cybage@123";
+	private static String dbPassword = "tanner";
 	private static String className="com.mysql.cj.jdbc.Driver";
 
 //	static {

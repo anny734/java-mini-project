@@ -15,28 +15,19 @@ public class UserServiceImpl implements UserService{
 	public UserServiceImpl(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	public int addUser(User user) {
-		
-		return 0;
-	}
-
+	
 	public List<Course> getCourse(int id) throws Exception {
 		List<Course> course = userDao.getCourse(id);
 		return course;
 	}
 
-	public List<Category> getCategory() {
-	
-		return null;
+	public List<Category> getCategory() throws Exception {
+		List<Category> categories = userDao.getCategory();
+		return categories;
 	}
 
 	public int addEnrollement(EnrollCourse e) throws Exception{
 		return userDao.addEnrollement(e);
-	}
-
-	public int addVideoDetails(Video v) {
-		
-		return 0;
 	}
 
 	public List<Video> getVideo(int id) throws Exception{
@@ -45,6 +36,17 @@ public class UserServiceImpl implements UserService{
 	}
 	public int getentrollement(int user_id, int course_id) throws Exception {
 		return userDao.getentrollement(user_id, course_id);
+	}
+	public int getUserId(String username) throws Exception {
+		return userDao.getUserId(username);
+	}
+
+	public List<Category> searchByCategory(String search) throws Exception {
+		return userDao.searchByCategory(search);
+	}
+
+	public List<Course> searchByCourse(String search) throws Exception {
+		return userDao.searchByCourse(search);
 	}
 
 }

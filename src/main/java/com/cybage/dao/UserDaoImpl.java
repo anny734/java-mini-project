@@ -8,16 +8,9 @@ import com.cybage.model.*;
 import com.cybage.util.DbUtil;
 
 public class UserDaoImpl implements UserDao{
-	
-	public int addUser(User user) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	public List<Course> getCourse(int id) throws Exception {
 		Connection con = DbUtil.getCon();
-
-	
 		String sql = "select course_id, course_name, course_image, category_id, course_desc from course where category_id = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setInt(1, id);
@@ -36,9 +29,21 @@ public class UserDaoImpl implements UserDao{
 		return courses;
 	}
 
-	public List<Category> getCategory() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Category> getCategory() throws Exception{
+		Connection con = DbUtil.getCon();
+		String sql = "select category_id, category_name, category_image from category";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+
+		List<Category> categories = new ArrayList<Category>();
+		while (rs.next()) {
+			Category category = new Category();
+			category.setId(rs.getInt(1));
+			category.setName(rs.getString(2));
+			category.setCategory_url(rs.getString(3));
+			categories.add(category);
+		}
+		return categories;
 	}
 
 	public int addEnrollement(EnrollCourse e) throws Exception {
@@ -58,7 +63,6 @@ public class UserDaoImpl implements UserDao{
 			ps1.setInt(1, course_id);
 			ResultSet rs = ps1.executeQuery();
 
-//			List<Integer> video_ids = new ArrayList<Integer>();
 			while (rs.next()) {
 				int video_id = rs.getInt(1);
 				String sql2 = "insert into enroll_course_video (user_id, course_id, video_id) values(?,?,?)";
@@ -74,11 +78,6 @@ public class UserDaoImpl implements UserDao{
 		
 		return count;
 		 
-	}
-
-	public int addVideoDetails(Video v) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	public List<Video> getVideo(int id) throws Exception{
@@ -114,6 +113,56 @@ public class UserDaoImpl implements UserDao{
 			return 0;
 		}
 		
+	}
+
+	public int getUserId(String username) throws Exception {
+		Connection con = DbUtil.getCon();
+		String sql = "select user_id from user where username = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, username);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next())
+			return rs.getInt(1);
+		else
+			return 0;
+	}
+
+	public List<Category> searchByCategory(String search) throws Exception {
+		Connection con = DbUtil.getCon();
+		String sql = "select category_id, category_name, category_image from category where category_name like ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, "%"+ search +"%");
+		ResultSet rs = ps.executeQuery();
+
+		List<Category> categories = new ArrayList<Category>();
+		while (rs.next()) {
+			Category category = new Category();
+			category.setId(rs.getInt(1));
+			category.setName(rs.getString(2));
+			category.setCategory_url(rs.getString(3));
+			categories.add(category);
+		}
+		return categories;
+	}
+
+	public List<Course> searchByCourse(String search) throws Exception {
+		Connection con = DbUtil.getCon();
+		String sql = "select course_id, course_name, course_image, category_id, course_desc from course where course_name like ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, "%"+ search +"%");
+		ResultSet rs = ps.executeQuery();
+
+		List<Course> courses = new ArrayList<Course>();
+		while (rs.next()) {
+			Course course = new Course();
+			course.setId(rs.getInt(1));
+			course.setName(rs.getString(2));
+			course.setCourse_image(rs.getBinaryStream(3));
+			course.setCategory(rs.getString(4));
+			course.setDesc(rs.getString(5));
+			courses.add(course);
+		}
+		return courses;
 	}
 
 }

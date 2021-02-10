@@ -21,12 +21,16 @@
 	<h2 class="category"><%=request.getParameter("course_name")%></h2> 
 	<c:forEach var="v" items="${video}">
 		<div class="list-group">
-		
-  		<a href="<%=request.getContextPath()%>/UserController/start-video" class="list-group-item list-group-item-action"><i class="fa fa-film"></i>  <c:out value="${v.name}"></c:out></a>
+		 <h4 class="list-group-item"><i class="fa fa-film"></i>   <c:out value="${v.name}"></c:out></h4>
+		<!-- it is not going in /start-video -->
+		<form action="<%=request.getContextPath()%>/UserController/start-video/" method="post">
+	        <input type="hidden" value="${v.id}" name="video_id">
+	        <input type="submit" value="Click here to see video" class="btn btn-primary list-group-item">
+			<%-- <a href="<%=request.getContextPath()%>/UserController/start-video/" class="list-group-item list-group-item-action"> </a> --%>
+	    </form>
   		
-  		
-  		<!-- we can diable the next buttton  -->
-  		<!-- <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a> -->
+  		<!-- duration span -->
+        <!-- duration logic here -->
 </div>
 	</c:forEach>
 </body>
