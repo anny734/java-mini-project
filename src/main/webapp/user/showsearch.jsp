@@ -73,19 +73,60 @@ body {
     </form>
   </div>
 </div>
-<c:forEach var="u" items="${allCategories}">
+ <c:if test = "${searchresult == 0}">
+ 	<h3>No categories or courses found</h3>
+ 	<a href="<%=request.getContextPath()%>/UserController/main">Go Back</a>
+ </c:if> 
+
+ 	<c:forEach var="s" items="${searchedcategories}">
+ 		<h2>Available categories</h2>
 			<!-- card -->
 		    <div class="card" style="width:400px">
-		      <img class="card-img-top" src="${u.category_url}" alt="Card image" style="width:100%">
+		      <img class="card-img-top" src="${s.category_url}" alt="Card image" style="width:100%">
 		      <div class="card-body">
-		        <h4 class="card-title"><c:out value="${u.name}"></c:out></h4>
+		        <h4 class="card-title"><c:out value="${s.name}"></c:out></h4>
 		        <form action="<%=request.getContextPath()%>/UserController/show-courses" method="post">
-					<input type="hidden" value="${u.id}" name="category_id">
-					<input type="hidden" value="${u.name}" name="category_name">
+					<input type="hidden" value="${s.id}" name="category_id">
+					<input type="hidden" value="${s.name}" name="category_name">
 					<input type="submit" value="Explore more" class="btn btn-primary">
 				</form>
 		      </div>
 		    </div>
-</c:forEach>
+	</c:forEach>
+<c:if test="${searchedcourses != null}"><h2>Available courses</h2></c:if>
+ <c:forEach var="u" items="${enrolledcoursesearch}">
+ 	
+ 	
+		<!-- card -->
+	    <div class="card" style="width:400px">
+	      <img class="card-img-top" src="${u.course_image}" alt="Card image" style="width:100%">
+	      <div class="card-body">
+	        <h4 class="card-title"><c:out value="${u.name}"></c:out></h4>
+	        <p class="card-text"><c:out value="${u.desc}"></c:out></p>
+	        <form action="<%=request.getContextPath()%>/UserController/continue-course" method="post">
+	        	<input type="hidden" value="${u.id}" name="course_id">
+	        	<input type="hidden" value="${u.name}" name="course_name">
+	        	<input type="submit" value="Continue" class="btn btn-primary">
+	        </form>
+	      </div>
+	    </div>
+	</c:forEach>
+	<c:forEach var="n" items="${newcoursesearch}">
+	
+		<!-- card -->
+	    <div class="card" style="width:400px">
+	      <img class="card-img-top" src="${n.course_image}" alt="Card image" style="width:100%">
+	      <div class="card-body">
+	        <h4 class="card-title"><c:out value="${n.name}"></c:out></h4>
+	        <p class="card-text"><c:out value="${n.desc}"></c:out></p>
+	        <form action="<%=request.getContextPath()%>/UserController/start-course" method="post">
+	        	<input type="hidden" value="${n.id}" name="course_id">
+	        	<input type="hidden" value="${n.name}" name="course_name">
+	        	<input type="submit" value="Enroll Now" class="btn btn-primary">
+	        </form>
+	      </div>
+	    </div>
+	</c:forEach>
+
 </body>
 </html>

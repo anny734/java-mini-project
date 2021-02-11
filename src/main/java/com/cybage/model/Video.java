@@ -54,5 +54,10 @@ public class Video {
 	public Video() {
 		super();
 	}
+	@Override
+	public String toString() {
+		return "Video [id=" + id + ", name=" + name + ", duration=" + duration + ", url=" + url + ", course=" + course
+				+ "]";
+	}
 	
 }

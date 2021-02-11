@@ -60,9 +60,12 @@ public class UserController extends HttpServlet {
 		if (path.equals("/search")) {
 			String text = request.getParameter("search");
 			int searchresult = 0;
-			List<Course> searchedcourse = null;
+			int user_id = (Integer)session.getAttribute("user_id");
+			List<Course> enrolledcoursesearch = new ArrayList<Course>();
+			List<Course> newcoursesearch = new ArrayList<Course>();
+			List<Course> searchedcourses = null;
 			try {
-				searchedcourse = userService.searchByCourse(text);
+				searchedcourses = userService.searchByCourse(text);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -74,12 +77,30 @@ public class UserController extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			if(searchedcategories.size() == 0) {
+			if(searchedcategories.size() == 0 && searchedcourses.size() == 0) {
 				searchresult = 0;
 				request.setAttribute("searchresult", searchresult);
 			}
+			for (int i = 0; i < searchedcourses.size(); i++) {
+	            int course_id = searchedcourses.get(i).getId();
+	            try {
+				int result = userService.getentrollement(user_id, course_id);
+						if(result==1) {
+							enrolledcoursesearch.add(searchedcourses.get(i));
+						}else{
+							newcoursesearch.add(searchedcourses.get(i));	
+						}		
+	            	} catch (Exception e1) {
+	            		e1.getLocalizedMessage();
+	            		}
+	        }
+			request.setAttribute("searchedcourses", searchedcourses);
+			request.setAttribute("enrolledcoursesearch", enrolledcoursesearch);
+			request.setAttribute("newcoursesearch", newcoursesearch);
 			request.setAttribute("searchedcategories", searchedcategories);
-			request.getRequestDispatcher("/user/landing.jsp").forward(request, response);
+			request.getRequestDispatcher("/user/showsearch.jsp").forward(request, response);
+			
+			
 		}
 		if (path.equals("/show-courses")) {
 			int category_id = Integer.parseInt(request.getParameter("category_id"));
@@ -115,6 +136,7 @@ public class UserController extends HttpServlet {
 		if (path.equals("/start-course")) {
 			int course_id = Integer.parseInt(request.getParameter("course_id"));
 			int user_id = (Integer)session.getAttribute("user_id");
+			System.out.println("userid: "+user_id+ " course_id: "+course_id);
 			
 			java.util.Date utilDate = new java.util.Date();
 			Date startDate = new Date(utilDate.getTime());
@@ -131,6 +153,7 @@ public class UserController extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		
 			request.setAttribute("video", video);
 			request.getRequestDispatcher("/user/videodetails.jsp").forward(request, response);
 		}
